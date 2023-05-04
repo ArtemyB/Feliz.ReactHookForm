@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Feliz.ReactHookForm", "Feliz.ReactHookForm\Feliz.ReactHookForm.fsproj", "{686C9589-7F71-4DFE-BE89-9BD188CCFC42}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Feliz.ReactHookForm.TestApp", "Feliz.ReactHookForm.TestApp\Feliz.ReactHookForm.TestApp.fsproj", "{4D14DF8C-7F3F-44E2-BF89-2C3F75F7EB8B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3004BB6F-24CE-43EB-A987-EADF8B086CF1}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		package.json = package.json
+		pnpm-lock.yaml = pnpm-lock.yaml
+		tsconfig.json = tsconfig.json
+		tsconfig.node.json = tsconfig.node.json
+		vite.config.js = vite.config.js
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{686C9589-7F71-4DFE-BE89-9BD188CCFC42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{686C9589-7F71-4DFE-BE89-9BD188CCFC42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{686C9589-7F71-4DFE-BE89-9BD188CCFC42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{686C9589-7F71-4DFE-BE89-9BD188CCFC42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D14DF8C-7F3F-44E2-BF89-2C3F75F7EB8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D14DF8C-7F3F-44E2-BF89-2C3F75F7EB8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D14DF8C-7F3F-44E2-BF89-2C3F75F7EB8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D14DF8C-7F3F-44E2-BF89-2C3F75F7EB8B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EDB11CCC-6E97-401B-86C8-9E293F07543B}
+	EndGlobalSection
+EndGlobal
