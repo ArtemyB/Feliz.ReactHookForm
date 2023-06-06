@@ -227,6 +227,8 @@ let useController<'FormValues, 'Value> (props: seq<IRhfControllerProp>) : UseCon
         |> Option.defaultValue { message = "" }
     , [| r.fieldState.error |])
 
+    let onChange = React.useCallback(r.field.onChange null, [| r.field.onChange |])
+
     React.useMemo(fun () ->
         {
             fieldState = {
@@ -238,7 +240,7 @@ let useController<'FormValues, 'Value> (props: seq<IRhfControllerProp>) : UseCon
             field = {
                 name = r.field.name
                 value = r.field.value
-                onChange = !!r.field.onChange
+                onChange = onChange
                 onChangeEvent = r.field.onChange
                 onBlur = r.field.onBlur
             }
@@ -249,7 +251,7 @@ let useController<'FormValues, 'Value> (props: seq<IRhfControllerProp>) : UseCon
             errorMessage = error.message
             name = r.field.name
             value = r.field.value
-            onChange = !!r.field.onChange
+            onChange = onChange
             onChangeEvent = r.field.onChange
             onBlur = r.field.onBlur
         }

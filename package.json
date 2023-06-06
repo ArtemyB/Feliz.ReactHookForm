@@ -1,27 +1,29 @@
 {
-	"version": "1.0.0",
-	"name": "feliz-react-hook-form",
-	"private": true,
-	"scripts": {
-		"start": "dotnet fable watch ./Feliz.ReactHookForm.TestApp --noRestore --sourceMaps --run vite serve ./Feliz.ReactHookForm.TestApp --config ./vite.config.js",
-		"start-without-fable": "vite serve ./Feliz.ReactHookForm.TestApp --config ./vite.config.js",
-		"preview": "vite preview ./Feliz.ReactHookForm.TestApp --config ./vite.config.js"
-	},
-	"devDependencies": {
-		"@types/react": "^18.0.37",
-		"@types/react-dom": "^18.0.11",
-		"@typescript-eslint/eslint-plugin": "^5.59.0",
-		"@typescript-eslint/parser": "^5.59.0",
-		"@vitejs/plugin-react": "^4.0.0",
-		"eslint": "^8.38.0",
-		"eslint-plugin-react-hooks": "^4.6.0",
-		"eslint-plugin-react-refresh": "^0.3.4",
-		"typescript": "^5.0.2",
-		"vite": "^4.3.4"
-	},
-	"dependencies": {
-		"react": "^18",
-		"react-dom": "^18",
-		"react-hook-form": "^7"
-	}
+    "version": "1.0.0",
+    "name": "feliz-react-hook-form",
+    "type": "module",
+    "private": true,
+    "scripts": {
+        "start": "dotnet fable watch ./Feliz.ReactHookForm.TestApp --noRestore --sourceMaps --run vite serve ./Feliz.ReactHookForm.TestApp --config ./vite.config.js",
+        "start-without-fable": "vite serve ./Feliz.ReactHookForm.TestApp --config ./vite.config.js",
+        "preview": "vite preview ./Feliz.ReactHookForm.TestApp --config ./vite.config.js"
+    },
+    "devDependencies": {
+        "@types/react": "^18.0.37",
+        "@types/react-dom": "^18.0.11",
+        "@types/node": "~20.2",
+        "@typescript-eslint/eslint-plugin": "^5.59.0",
+        "@typescript-eslint/parser": "^5.59.0",
+        "@vitejs/plugin-react": "^4.0.0",
+        "eslint": "^8.38.0",
+        "eslint-plugin-react-hooks": "^4.6.0",
+        "eslint-plugin-react-refresh": "^0.3.4",
+        "typescript": "^5.0.2",
+        "vite": "^4.3.4"
+    },
+    "dependencies": {
+        "react": "^18",
+        "react-dom": "^18",
+        "react-hook-form": "^7"
+    }
 }

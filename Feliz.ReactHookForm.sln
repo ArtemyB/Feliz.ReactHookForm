@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		pnpm-lock.yaml = pnpm-lock.yaml
 		tsconfig.json = tsconfig.json
 		tsconfig.node.json = tsconfig.node.json
-		vite.config.js = vite.config.js
+		vite.config.ts = vite.config.ts
 	EndProjectSection
 EndProject
 Global
