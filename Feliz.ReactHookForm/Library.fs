@@ -4,66 +4,12 @@ open System
 open Fable.Core
 open Fable.Core.JsInterop
 open Feliz
-open Fable.ReactHookForm
+open Bindings
 
-type Regex = System.Text.RegularExpressions.Regex
-
-let inline FormProvider (props: UseFormReturn<'T>) children : ReactElement =
-    Fable.React.Helpers.ofImport "FormProvider" "react-hook-form" props children
-
-
-let inline useFormContext<'T> () : UseFormReturn<'T> =
-    (import "useFormContext" "react-hook-form") ()
-
-
-let inline DevTool (control: Control<'T>) =
-    (import "DevTool" "@hookform/devtools") {| control = control |}
-
-type ValidationRule<'TValidationValue> = {|
-    value: 'TValidationValue;
-    message: string
-|}
-
-module ValidationRule =
-    let inline create value message : ValidationRule<'ValidationValue> =
-        {| value = value; message = message |}
-
-type IRhfFormProp = interface end
-type IRhfControllerProp = interface end
-type IRhfRule = interface end
-type IRhfFormResetProp = interface end
-
-let inline rhfFormProp (name: string) (value: 'T) : IRhfFormProp = unbox (name, value)
-let inline rhfControllerProp (name: string) (value: 'T) : IRhfControllerProp = unbox (name, value)
-let inline rhfRule (name: string) (value: 'T) : IRhfRule = unbox (name, value)
-let inline rhfFormResetProp (name: string) (value: 'T) : IRhfFormResetProp = unbox (name, value)
-
-type private SubmitHandlerPromise<'T> = 'T -> JS.Promise<unit>
-type private SubmitErrorHandlerPromise = obj -> JS.Promise<unit>
-
-
-type private ControllerRenderPropsInternal<'F> =
-    abstract name: string
-    abstract value: 'F
-    abstract onChange: (Browser.Types.Event -> 'F -> unit)
-    abstract onBlur: (unit -> unit)
-
-type private ControllerFieldStateInternal =
-    abstract invalid: bool
-    abstract isTouched: bool
-    abstract isDirty: bool
-    abstract error: ControllerValidationError option
-
-type private UseFormReturnInternal<'T> =
-    abstract control: Control<'T>
-    abstract handleSubmit: SubmitHandlerPromise<'T> -> SubmitErrorHandlerPromise -> Func<Browser.Types.Event, unit>
-    abstract reset: obj -> obj -> unit
-    abstract formState: FormState<'T>
-    abstract getValues: obj
-
-type private UseControllerReturnInternal<'F> =
-    abstract field: ControllerRenderPropsInternal<'F>
-    abstract fieldState: ControllerFieldStateInternal
+type SubmitHandler<'T> = 'T -> unit
+type SubmitErrorHandler = obj -> unit
+type SubmitHandlerAsync<'T> = 'T -> Async<unit>
+type SubmitErrorHandlerAsync = obj -> Async<unit>
 
 
 type ControllerRenderProps<'F> = {
@@ -74,6 +20,12 @@ type ControllerRenderProps<'F> = {
     onBlur: unit -> unit
 }
 
+type ControllerFieldState = {
+    invalid: bool
+    isTouched: bool
+    isDirty: bool
+    error: ControllerValidationError
+}
 
 type UseControllerReturn<'T,'F> = {
     field: ControllerRenderProps<'F>
@@ -90,6 +42,15 @@ type UseControllerReturn<'T,'F> = {
     errorMessage: string
 }
 
+type UseFormReturn<'T> = {
+    control: Control<'T>
+    handleSubmit: SubmitHandler<'T> -> SubmitErrorHandler -> Browser.Types.Event -> unit
+    handleSubmitAsync: SubmitHandlerAsync<'T> -> SubmitErrorHandlerAsync -> Browser.Types.Event -> unit
+    reset: IRhfFormResetProp<'T> list -> unit
+    formState: FormState<'T>
+    getValues: obj
+}
+
 
 let inline private mapResultToOption (result: Result<'T, string>) : string option =
     match result with
@@ -102,7 +63,6 @@ let inline private mapAsyncResultToOption (result: Async<Result<'T, string>>) : 
         return (mapResultToOption result')
     }
     |> Async.StartAsPromise
-
 
 
 [<Erase>]
@@ -146,6 +106,7 @@ type RhfRule =
     static member inline pattern (regexPattern: string, message: string) =
         RhfRule.pattern (Regex regexPattern, message)
 
+
 [<Erase>]
 module RhfForm =
     [<Erase>]
@@ -155,7 +116,6 @@ module RhfForm =
         static member inline onSubmit = rhfFormProp "mode" "onSubmit"
         static member inline onTouched = rhfFormProp "mode" "onTouched"
         static member inline all = rhfFormProp "mode" "all"
-
 
 [<Erase>]
 type RhfForm =
@@ -172,59 +132,85 @@ type RhfController =
     static member inline control (value: Control<'T>) = rhfControllerProp "control" value
 
 
+let inline DevTool (control: Control<'T>) =
+    (import "DevTool" "@hookform/devtools") {| control = control |}
+
 
 [<Hook>]
-let useForm<'FormValues> (props: seq<IRhfFormProp>) : UseFormReturn<'FormValues> =
-    let r: UseFormReturnInternal<'FormValues> =
-        (import "useForm" "react-hook-form") (createObj !!props)
-
-    let handleSubmit = React.useCallback (fun (s: SubmitHandler<'FormValues>) (e: SubmitErrorHandler) ->
+let internal useHandleSubmit (r: UseFormReturnInternal<'T>) =
+    React.useCallback (fun (s: SubmitHandler<'FormValues>) (e: SubmitErrorHandler) ->
         (r.handleSubmit !!s !!e).Invoke
     , [| r.handleSubmit |])
 
-    let handleSubmitAsync = React.useCallback(fun s e ->
+[<Hook>]
+let internal useHandleSubmitAsync (r: UseFormReturnInternal<'T>) =
+    React.useCallback(fun s e ->
         let sp = s >> Async.StartAsPromise
         let ep = e >> Async.StartAsPromise
         (r.handleSubmit sp ep).Invoke
     , [| r.handleSubmit |])
 
-    let reset = React.useCallback(fun (opts: FormResetProps<'FormValues> list) ->
+[<Hook>]
+let internal useReset (r: UseFormReturnInternal<'T>) =
+    React.useCallback(fun (opts: IRhfFormResetProp<'FormValues> list) ->
         let (v, o) =
-            opts |> List.partition (function
-                | Values _ -> true
+            opts |> List.partition (fun prop ->
+                match unbox<string * obj> prop with
+                | ("values", _) -> true
                 | _ -> false)
 
         let newValue =
             List.tryHead v
-            |> Option.map (function
-                | Values v -> Some v
+            |> Option.map (fun prop ->
+                match unbox<string * obj> prop with
+                | ("values", v) -> Some v
                 | _ -> None)
             |> Option.flatten
 
-        keyValueList CaseRules.LowerFirst o
-        |> r.reset newValue
+        createObj !!o |> r.reset newValue
     , [| r.reset |])
+
+
+[<Hook>]
+let internal useFormReturn<'T> (form: UseFormReturnInternal<'T>) : UseFormReturn<'T> =
+    let handleSubmit = useHandleSubmit form
+    let handleSubmitAsync = useHandleSubmitAsync form
+    let reset = useReset form
 
     React.useMemo(fun () ->
         {
-            control = r.control
+            control = form.control
             handleSubmit = handleSubmit
             handleSubmitAsync = handleSubmitAsync
             reset = reset
-            formState = r.formState
-            getValues = r.getValues
+            formState = form.formState
+            getValues = form.getValues
         }
-    , [| r.control; handleSubmit; handleSubmitAsync; reset; r.formState; r.getValues |])
+    , [| form.control; handleSubmit; handleSubmitAsync; reset; form.formState; form.getValues |])
+
+
+let inline FormProvider (props: UseFormReturn<'T>) children : ReactElement =
+    Fable.React.Helpers.ofImport "FormProvider" "react-hook-form" props children
+
+[<Hook>]
+let useFormContext<'T> () : UseFormReturn<'T> =
+    let form = Bindings.useFormContext<'T> ()
+    useFormReturn form
+
+
+[<Hook>]
+let useForm<'FormValues> (props: seq<IRhfFormProp>) : UseFormReturn<'FormValues> =
+    let r = Bindings.useForm<'FormValues> props
+    useFormReturn r
 
 
 [<Hook>]
 let useController<'FormValues, 'Value> (props: seq<IRhfControllerProp>) : UseControllerReturn<'FormValues, 'Value> =
-    let r: UseControllerReturnInternal<'Value> =
-        (import "useController" "react-hook-form") (createObj !!props)
+    let r = Bindings.useController<'Value> props
 
     let error = React.useMemo(fun () ->
         r.fieldState.error
-        |> Option.defaultValue { message = "" }
+        |> Option.defaultValue !!{| message = "" |}
     , [| r.fieldState.error |])
 
     let onChange = React.useCallback(r.field.onChange null, [| r.field.onChange |])
