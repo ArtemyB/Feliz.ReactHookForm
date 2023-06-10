@@ -125,11 +125,11 @@ type RhfForm =
 type RhfController =
     static member inline name (value: string) = rhfControllerProp "name" value
     static member inline name ([<InlineIfLambda>] getField: 'FormValues -> 'Value) =
-        let name = Experimental.namesofLambda getField |> String.concat "."
-        rhfControllerProp "name" name
+        let fieldName = Experimental.namesofLambda getField |> String.concat "."
+        RhfController.name fieldName : IRhfControllerProp<'FormValues, 'Value>
     static member inline rules (rules: #seq<IRhfRule>) = rhfControllerProp "rules" (createObj !!rules)
-    static member inline defaultValue (value: 'T) = rhfControllerProp "defaultValue" value
-    static member inline control (value: Control<'T>) = rhfControllerProp "control" value
+    static member inline defaultValue (value: 'Value) = rhfControllerProp<_, 'Value> "defaultValue" value
+    static member inline control (value: Control<'FormValues>) = rhfControllerProp<'FormValues, _> "control" value
 
 
 let inline DevTool (control: Control<'T>) =
@@ -205,8 +205,8 @@ let useForm<'FormValues> (props: seq<IRhfFormProp>) : UseFormReturn<'FormValues>
 
 
 [<Hook>]
-let useController<'FormValues, 'Value> (props: seq<IRhfControllerProp>) : UseControllerReturn<'FormValues, 'Value> =
-    let r = Bindings.useController<'Value> props
+let useController<'FormValues, 'Value> (props: seq<IRhfControllerProp<'FormValues, 'Value>>) : UseControllerReturn<'FormValues, 'Value> =
+    let r = Bindings.useController<'FormValues, 'Value> props
 
     let error = React.useMemo(fun () ->
         r.fieldState.error

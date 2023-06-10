@@ -21,12 +21,12 @@ module ValidationRule =
         {| value = value; message = message |}
 
 type IRhfFormProp = interface end
-type IRhfControllerProp = interface end
+type IRhfControllerProp<'FormValues, 'Value> = interface end
 type IRhfRule = interface end
 type IRhfFormResetProp<'FormValues> = interface end
 
 let inline rhfFormProp (name: string) (value: 'T) : IRhfFormProp = unbox (name, value)
-let inline rhfControllerProp (name: string) (value: 'T) : IRhfControllerProp = unbox (name, value)
+let inline rhfControllerProp<'FormValues, 'Value> (name: string) (value: obj) : IRhfControllerProp<'FormValues, 'Value> = unbox (name, value)
 let inline rhfRule (name: string) (value: 'T) : IRhfRule = unbox (name, value)
 let inline rhfFormResetProp<'FormValues, 'T> (name: string) (value: 'T) : IRhfFormResetProp<'FormValues> = unbox (name, value)
 
@@ -84,5 +84,5 @@ let inline internal useFormContext<'T> () : UseFormReturnInternal<'T> =
 let inline internal useForm<'FormValues> (props: seq<IRhfFormProp>) : UseFormReturnInternal<'FormValues> =
     (import "useForm" "react-hook-form") (createObj !!props)
 
-let inline internal useController<'Value> (props: seq<IRhfControllerProp>) : UseControllerReturnInternal<'Value> =
+let inline internal useController<'FormValues, 'Value> (props: seq<IRhfControllerProp<'FormValues, 'Value>>) : UseControllerReturnInternal<'Value> =
     (import "useController" "react-hook-form") (createObj !!props)
