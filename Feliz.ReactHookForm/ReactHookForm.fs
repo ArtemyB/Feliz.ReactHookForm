@@ -66,8 +66,8 @@ let inline private mapAsyncResultToOption (result: Async<Result<'T, string>>) : 
 
 
 [<Erase>]
-type FormResetProp<'T> =
-    static member inline values (value: 'T) = rhfFormResetProp "values" value
+type FormResetProp =
+    static member inline values (value: 'FormValues) = rhfFormResetProp<'FormValues> "values" value
     static member inline keepErrors (value: bool) = rhfFormResetProp "keepErrors" value
     static member inline keepDirty (value: bool) = rhfFormResetProp "keepDirty" value
     static member inline keepDirtyValues (value: bool) = rhfFormResetProp "keepDirtyValues" value

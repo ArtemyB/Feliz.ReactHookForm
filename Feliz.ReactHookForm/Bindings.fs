@@ -28,7 +28,7 @@ type IRhfFormResetProp<'FormValues> = interface end
 let inline rhfFormProp (name: string) (value: 'T) : IRhfFormProp = unbox (name, value)
 let inline rhfControllerProp<'FormValues, 'Value> (name: string) (value: obj) : IRhfControllerProp<'FormValues, 'Value> = unbox (name, value)
 let inline rhfRule (name: string) (value: 'T) : IRhfRule = unbox (name, value)
-let inline rhfFormResetProp<'FormValues, 'T> (name: string) (value: 'T) : IRhfFormResetProp<'FormValues> = unbox (name, value)
+let inline rhfFormResetProp<'FormValues> (name: string) (value: obj) : IRhfFormResetProp<'FormValues> = unbox (name, value)
 
 type private SubmitHandlerPromise<'T> = 'T -> JS.Promise<unit>
 type private SubmitErrorHandlerPromise = obj -> JS.Promise<unit>
