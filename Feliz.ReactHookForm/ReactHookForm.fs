@@ -66,70 +66,70 @@ let inline private mapAsyncResultToOption (result: Async<Result<'T, string>>) : 
 
 
 [<Erase>]
-type FormResetProp =
-    static member inline values (value: 'FormValues) = rhfFormResetProp<'FormValues> "values" value
-    static member inline keepErrors (value: bool) = rhfFormResetProp "keepErrors" value
-    static member inline keepDirty (value: bool) = rhfFormResetProp "keepDirty" value
-    static member inline keepDirtyValues (value: bool) = rhfFormResetProp "keepDirtyValues" value
-    static member inline keepValues (value: bool) = rhfFormResetProp "keepValues" value
-    static member inline keepDefaultValues (value: bool) = rhfFormResetProp "keepDefaultValues" value
-    static member inline keepIsSubmitted (value: bool) = rhfFormResetProp "keepIsSubmitted" value
-    static member inline keepTouched (value: bool) = rhfFormResetProp "keepTouched" value
-    static member inline keepIsValid (value: bool) = rhfFormResetProp "keepIsValid" value
-    static member inline keepSubmitCount (value: bool) = rhfFormResetProp "keepSubmitCount" value
+type rhfFormResetProp =
+    static member inline values (value: 'FormValues) = Interop.rhfFormResetProp<'FormValues> "values" value
+    static member inline keepErrors (value: bool) = Interop.rhfFormResetProp "keepErrors" value
+    static member inline keepDirty (value: bool) = Interop.rhfFormResetProp "keepDirty" value
+    static member inline keepDirtyValues (value: bool) = Interop.rhfFormResetProp "keepDirtyValues" value
+    static member inline keepValues (value: bool) = Interop.rhfFormResetProp "keepValues" value
+    static member inline keepDefaultValues (value: bool) = Interop.rhfFormResetProp "keepDefaultValues" value
+    static member inline keepIsSubmitted (value: bool) = Interop.rhfFormResetProp "keepIsSubmitted" value
+    static member inline keepTouched (value: bool) = Interop.rhfFormResetProp "keepTouched" value
+    static member inline keepIsValid (value: bool) = Interop.rhfFormResetProp "keepIsValid" value
+    static member inline keepSubmitCount (value: bool) = Interop.rhfFormResetProp "keepSubmitCount" value
 
 
 [<Erase>]
-type RhfRule =
-    static member inline required (value: bool) = rhfRule "required" value
-    static member inline required (value: ValidationRule<bool>) = rhfRule "required" value
-    static member inline min (value: float) = rhfRule "min" value
-    static member inline min (value: ValidationRule<float>) = rhfRule "min" value
-    static member inline min (value: string) = rhfRule "min" value
-    static member inline min (value: ValidationRule<string>) = rhfRule "min" value
-    static member inline max (value: float) = rhfRule "max"  value
-    static member inline max (value: ValidationRule<float>) = rhfRule "max"  value
-    static member inline max (value: string) = rhfRule "max"  value
-    static member inline max (value: ValidationRule<string>) = rhfRule "max"  value
-    static member inline maxLength (value: float) = rhfRule "maxLength" value
-    static member inline maxLength (value: ValidationRule<float>) = rhfRule "maxLength" value
-    static member inline minLength (value: float) = rhfRule "minLength" value
-    static member inline minLength (value: ValidationRule<float>) = rhfRule "minLength" value
-    static member inline validate (value: RuleValidateOption<'T>) = rhfRule "validate" value
-    static member inline validate (value: RuleValidatePromiseOption<'T>) = rhfRule "validate" value
+type rhfRule =
+    static member inline required (value: bool) = Interop.rhfRule "required" value
+    static member inline required (value: ValidationRule<bool>) = Interop.rhfRule "required" value
+    static member inline min (value: float) = Interop.rhfRule "min" value
+    static member inline min (value: ValidationRule<float>) = Interop.rhfRule "min" value
+    static member inline min (value: string) = Interop.rhfRule "min" value
+    static member inline min (value: ValidationRule<string>) = Interop.rhfRule "min" value
+    static member inline max (value: float) = Interop.rhfRule "max"  value
+    static member inline max (value: ValidationRule<float>) = Interop.rhfRule "max"  value
+    static member inline max (value: string) = Interop.rhfRule "max"  value
+    static member inline max (value: ValidationRule<string>) = Interop.rhfRule "max"  value
+    static member inline maxLength (value: float) = Interop.rhfRule "maxLength" value
+    static member inline maxLength (value: ValidationRule<float>) = Interop.rhfRule "maxLength" value
+    static member inline minLength (value: float) = Interop.rhfRule "minLength" value
+    static member inline minLength (value: ValidationRule<float>) = Interop.rhfRule "minLength" value
+    static member inline validate (value: RuleValidateOption<'T>) = Interop.rhfRule "validate" value
+    static member inline validate (value: RuleValidatePromiseOption<'T>) = Interop.rhfRule "validate" value
     static member inline validate (value: RuleValidateResult<'T>) =
-        value >> mapResultToOption |> RhfRule.validate
+        value >> mapResultToOption |> rhfRule.validate
     static member inline validate (value: RuleValidateAsyncResult<'T>) =
-        value >> mapAsyncResultToOption |> RhfRule.validate
+        value >> mapAsyncResultToOption |> rhfRule.validate
     static member inline pattern (regex: System.Text.RegularExpressions.Regex, message: string) =
-        rhfRule "pattern" (ValidationRule.create regex message)
+        Interop.rhfRule "pattern" (ValidationRule.create regex message)
     static member inline pattern (regexPattern: string, message: string) =
-        RhfRule.pattern (Regex regexPattern, message)
+        rhfRule.pattern (Regex regexPattern, message)
 
 
 [<Erase>]
-module RhfForm =
+module rhfForm =
     [<Erase>]
     type mode =
-        static member inline onChange = rhfFormProp "mode" "onChange"
-        static member inline onBlur = rhfFormProp "mode" "onBlur"
-        static member inline onSubmit = rhfFormProp "mode" "onSubmit"
-        static member inline onTouched = rhfFormProp "mode" "onTouched"
-        static member inline all = rhfFormProp "mode" "all"
+        static member inline onChange = Interop.rhfFormProp "mode" "onChange"
+        static member inline onBlur = Interop.rhfFormProp "mode" "onBlur"
+        static member inline onSubmit = Interop.rhfFormProp "mode" "onSubmit"
+        static member inline onTouched = Interop.rhfFormProp "mode" "onTouched"
+        static member inline all = Interop.rhfFormProp "mode" "all"
 
 [<Erase>]
-type RhfForm =
-    static member inline defaultValues (value: 'FormValues) = rhfFormProp "defaultValues" value
+type rhfForm =
+    static member inline defaultValues (value: 'FormValues) = Interop.rhfFormProp "defaultValues" value
 
 [<Erase>]
-type RhfController =
-    static member inline name (value: string) = rhfControllerProp "name" value
+type rhfController =
+    static member inline name (value: string) = Interop.rhfControllerProp "name" value
     static member inline name ([<InlineIfLambda>] getField: 'FormValues -> 'Value) =
         let fieldName = Experimental.namesofLambda getField |> String.concat "."
-        RhfController.name fieldName : IRhfControllerProp<'FormValues, 'Value>
-    static member inline rules (rules: #seq<IRhfRule>) = rhfControllerProp "rules" (createObj !!rules)
-    static member inline defaultValue (value: 'Value) = rhfControllerProp<_, 'Value> "defaultValue" value
-    static member inline control (value: Control<'FormValues>) = rhfControllerProp<'FormValues, _> "control" value
+        rhfController.name fieldName : IRhfControllerProp<'FormValues, 'Value>
+    static member inline rules (rules: #seq<IRhfRule>) = Interop.rhfControllerProp "rules" (createObj !!rules)
+    static member inline defaultValue (value: 'Value) = Interop.rhfControllerProp<_, 'Value> "defaultValue" value
+    static member inline control (value: Control<'FormValues>) = Interop.rhfControllerProp<'FormValues, _> "control" value
 
 
 let inline DevTool (control: Control<'T>) =

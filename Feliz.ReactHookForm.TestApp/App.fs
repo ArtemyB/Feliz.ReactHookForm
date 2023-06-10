@@ -24,9 +24,8 @@ let NameInput () =
     let form = ReactHookForm.useFormContext<FormValues>()
     let { field = field } as c =
         ReactHookForm.useController<FormValues, string> [
-            RhfController.name (fun (x: FormValues) -> x.name)
-            RhfController.control form.control
-            //RhfController.name (nameof formValues.name)
+            rhfController.name (fun (x: FormValues) -> x.name)
+            rhfController.control form.control
         ]
 
     Html.input [
@@ -43,9 +42,8 @@ let AgeInput () =
     let form = ReactHookForm.useFormContext<FormValues>()
     let { field = field } as c =
         ReactHookForm.useController<FormValues, int> [
-            RhfController.control form.control
-            //RhfController.name (nameof formValues.age)
-            RhfController.name (fun (x: FormValues) -> x.age)
+            rhfController.control form.control
+            rhfController.name (fun (x: FormValues) -> x.age)
         ]
 
     Html.input [
@@ -62,8 +60,8 @@ let AgeInput () =
 let TestForm () =
     let form =
         ReactHookForm.useForm<FormValues> [
-            RhfForm.mode.onBlur
-            RhfForm.defaultValues (FormValues.create "John Doe" 18)
+            rhfForm.mode.onBlur
+            rhfForm.defaultValues (FormValues.create "John Doe" 18)
         ]
 
     let onSubmit = React.useMemo(fun () ->
